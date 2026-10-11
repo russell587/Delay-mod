@@ -1,38 +1,38 @@
 {
-	"schemaVersion": 1,
-	"id": "Dtap optimzer",
-	"version": "${1.01}",
-	"name": "Dtap optimzer",
-	"description": "A delay in breaking a crystal based on your enemies damge tick on how much is left",
-	"authors": [
-		"orca_pvp"
-	],
-	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/russell587/Delay-mod/edit/26.3"
-	},
-	"license": "CC0-1.0",
-	"icon": "assets/modid/icon.png",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"com.example.ExampleMod"
-		],
-		"client": [
-			"com.example.client.ExampleModClient"
-		]
-	},
-	"mixins": [
-		"modid.mixins.json",
-		{
-			"config": "modid.client.mixins.json",
-			"environment": "client"
-		}
-	],
-	"depends": {
-		"fabricloader": ">=0.19.5",
-		"minecraft": "~26.2",
-		"java": ">=25",
-		"fabric-api": "*"
-	}
+  "schemaVersion": 1,
+  "id": "delaymod",
+  "version": "${version}",
+  "name": "Delay Mod",
+  "description": "A delay in breaking a crystal based on your enemy's damage tick and how much is left.",
+  "authors": [
+    "orca_pvp"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/russell587/Delay-mod/tree/26.3"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/modid/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.example.ExampleMod"
+    ],
+    "client": [
+      "com.example.client.ExampleModClient"
+    ]
+  },
+  "mixins": [
+    "modid.mixins.json",
+    {
+      "config": "modid.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "~26.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
 }
