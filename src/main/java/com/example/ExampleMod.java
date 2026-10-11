@@ -1,58 +1,49 @@
 package com.example;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.fabricmc.fabric.api.event.player.AttackEntityCallback; // not used, kept for compatibility with older loader variants if present
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.decoration.EndCrystalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.resources.Identifier;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ExampleMod implements ModInitializer {
-	public static final String MOD_ID = "modid";
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static final String MOD_ID = "modid";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	@Override
-	public void onInitialize() {
-		LOGGER.info("Delay-mod initialized");
+    @Override
+    public void onInitialize() {
+        LOGGER.info("Delay-mod initialized");
 
-		UseItemCallback.EVENT.register((player, world, hand) -> {
-			if (world.isClient) {
-				return ActionResult.PASS;
-			}
+        UseItemCallback.EVENT.register((player, world, hand) -> {
+            if (world.isClientSide()) {
+                return InteractionResult.PASS;
+            }
 
-			ItemStack stack = player.getStackInHand(hand);
-			if (stack.isOf(Items.END_CRYSTAL)) {
-				CrystalDelayController.onCrystalUse((ServerPlayerEntity) player);
-			}
+            ItemStack stack = player.getItemInHand(hand);
+            if (stack.is(Items.END_CRYSTAL)) {
+                CrystalDelayController.onCrystalUse((ServerPlayer) player);
+            }
 
-			return ActionResult.PASS;
-		});
+            return InteractionResult.PASS;
+        });
 
-		net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents.AFTER_HURT.register((living, source, damageTaken, handled) -> {
-			if (living instanceof PlayerEntity victim) {
-				CrystalDelayController.onEntityDamage(victim, source, damageTaken);
-			}
-		});
+        ServerEntityCombatEvents.AFTER_HURT.register((living, source, damageTaken, handled) -> {
+            if (living instanceof Player victim) {
+                CrystalDelayController.onEntityDamage(victim, source, damageTaken);
+            }
+        });
 
-		ServerTickEvents.END_SERVER_TICK.register(server -> {
-			for (ServerWorld world : server.getWorlds()) {
-				CrystalDelayController.tick(world);
-			}
-		});
-	}
-
-	public static Identifier id(String path) {
-		return Identifier.fromNamespaceAndPath(MOD_ID, path);
-	}
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            for (ServerLevel world : server.getAllLevels()) {
+                CrystalDelayController.tick(world);
+            }
+        });
+    }
 }
