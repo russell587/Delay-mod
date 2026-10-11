@@ -12,7 +12,7 @@ public final class DamageEventHandler {
     public static void register() {
         ServerLivingEntityEvents.AFTER_DAMAGE.register(new ServerLivingEntityEvents.AfterDamage() {
             @Override
-            public void afterDamage(LivingEntity entity, DamageSource source, float damageTaken) {
+            public void afterDamage(LivingEntity entity, DamageSource source, float damageTaken, float newHealth, boolean isDeathBlow) {
                 if (entity instanceof ServerPlayer player) {
                     CrystalDelayController.onEntityDamage(player, source, damageTaken);
                 }
