@@ -1,7 +1,6 @@
 package com.example;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.server.level.ServerLevel;
@@ -34,11 +33,8 @@ public class ExampleMod implements ModInitializer {
             return InteractionResult.PASS;
         });
 
-        ServerEntityCombatEvents.AFTER_HURT.register((living, source, damageTaken, handled) -> {
-            if (living instanceof Player victim) {
-                CrystalDelayController.onEntityDamage(victim, source, damageTaken);
-            }
-        });
+        // Register custom damage event handler
+        DamageEventHandler.register();
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (ServerLevel world : server.getAllLevels()) {
